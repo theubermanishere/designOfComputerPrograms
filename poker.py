@@ -25,3 +25,31 @@ def hand_rank(hand):
         return 1
     else:
         return 0                                # Nothing
+
+def card_ranks(hand):
+    """Returns the ranks of cards in sorted order."""
+    return sorted([rank for rank,suit in hand], reverse=True)
+
+def straight(ranks):
+    """Returns True if ranks form a straight."""
+    return len(set(ranks)) == 5 and (max(ranks) - min(ranks) == 4)
+
+def flush(hand):
+    """Returns True if the hand forms a flush."""
+    return len(set([suit for _, suit in hand])) == 1
+
+def nkind(ranks, n):
+    """Returns True if a n-of-a-kind is present in ranks."""
+    for i in set(ranks):
+        if ranks.count(i) == n:
+            return True
+    return False
+
+def twoPair(ranks):
+    """Returns the two pair if present in the hand, else None."""
+    pair = nkind(ranks, 2)
+    lowpair = nkind(list(reversed(ranks)), 2)
+    if pair != lowpair:
+        return (pair, lowpair)
+    else:
+        return None
