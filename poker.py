@@ -53,3 +53,14 @@ def twoPair(ranks):
         return (pair, lowpair)
     else:
         return None
+
+defaultDeck = [a+b for a in '23456789TJQKA' for s in 'SHDC']
+
+def deal(numhands, n = 5, deck = defaultDeck):
+    """Deals numhands hands of n cards from deck."""
+    random.shuffle(deck)
+    for i in range(numhands):
+        yield deck[i*n:n*(i+1)]
+
+if __name__ == '__main__':
+    # TODO: Add Tests
