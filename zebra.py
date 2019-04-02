@@ -4,7 +4,7 @@ import itertools
 
 def imRight(h1, h2):
     """ Procedure to check if h1 is immediately right of h2. """
-    return h1 - h1 == 1
+    return h1 - h2 == 1
 
 def nextTo(h1, h2):
     """ Procedure to check if h1 is next to h2. """
@@ -38,24 +38,25 @@ def zebra_puzzle():
     orderings = list(itertools.permutations(houses))
     return next((WATER, ZEBRA)
             for (red, green, ivory, yellow, blue) in orderings
-            for (Englishman, Spaniard, Ukrainian, Japanese, Norweign) in orderings
-            for (dog, snails, fox, horse, ZEBRA) in orderings
-            for (coffee, tea, milk, orangeJuice, WATER) in orderings
-            for (oldGold, kools, chester, parliaments, luckyStrike) in orderings
-            if Englishman is red #2
-            if Spaniard is dog #3
-            if Coffee is green #4
-            if Ukrainian is tea #5
             if imRight(green, ivory) #6
+            for (Englishman, Spaniard, Ukrainian, Japanese, Norweign) in orderings
+            if Englishman is red #2
+            if Norweign is first #10
+            if nextTo(Norweign, blue) #15
+            for (dog, snail, fox, horse, ZEBRA) in orderings
+            if Spaniard is dog #3
+            for (coffee, tea, milk, orangeJuice, WATER) in orderings
+            if coffee is green #4
+            if Ukrainian is tea #5
+            if milk is middle #9
+            for (oldGold, kools, chester, parliaments, luckyStrike) in orderings
             if oldGold is snail #7
             if kools is yellow #8
-            if milk is middle #9
-            if Norweign is first #10
             if nextTo(chester, fox) #11
             if nextTo(kools, horse) #12
             if luckyStrike is orangeJuice #13
             if Japanese is parliaments #14
-            if nextTo(Norweign, blue) #15
+            )
 
-if __name__ == '__main__':
-    print(zebra_puzzle())
+if __name__ == "__main__":
+    print("Water: {0}, Zebra: {1}".format(*zebra_puzzle()))
