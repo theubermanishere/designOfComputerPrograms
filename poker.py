@@ -1,4 +1,5 @@
 # Program for deciding a winner amongst players in a game of poker
+import random
 
 def poker(hands):
     """Program to output the winning hands from all hands."""
@@ -19,7 +20,7 @@ def hand_rank(hand):
         return 4
     elif nkind(ranks, 3):                       # 3 of a kind
         return 3
-    elif pair(ranks):                           # Two pair
+    elif twoPair(ranks):                        # Two pair
         return 2
     elif nkind(ranks, 2):                       # One pair
         return 1
@@ -28,10 +29,12 @@ def hand_rank(hand):
 
 def card_ranks(hand):
     """Returns the ranks of cards in sorted order."""
-    return sorted([rank for rank,suit in hand], reverse=True)
+    return sorted(['-23456789TJQKA'.find(rank) for rank,suit in hand], reverse=True)
 
 def straight(ranks):
     """Returns True if ranks form a straight."""
+    if ranks == [13, 4, 3, 2, 1]:
+        ranks = [4, 3, 2, 1, 0]
     return len(set(ranks)) == 5 and (max(ranks) - min(ranks) == 4)
 
 def flush(hand):
@@ -40,9 +43,9 @@ def flush(hand):
 
 def nkind(ranks, n):
     """Returns True if a n-of-a-kind is present in ranks."""
-    for i in set(ranks):
+    for i in ranks:
         if ranks.count(i) == n:
-            return True
+            return i
     return False
 
 def twoPair(ranks):
@@ -54,7 +57,7 @@ def twoPair(ranks):
     else:
         return None
 
-defaultDeck = [a+b for a in '23456789TJQKA' for s in 'SHDC']
+defaultDeck = [a+s for a in '23456789TJQKA' for s in 'SHDC']
 
 def deal(numhands, n = 5, deck = defaultDeck):
     """Deals numhands hands of n cards from deck."""
@@ -63,4 +66,21 @@ def deal(numhands, n = 5, deck = defaultDeck):
         yield deck[i*n:n*(i+1)]
 
 if __name__ == '__main__':
-    # TODO: Add Tests
+    hands = list(deal(5))
+    print("Hands:")
+    for hand in hands:
+        print(hand)
+    print("Winner: ")
+    print(poker(hands))
+
+    # Tests
+    assert hand_rank(['9D', 'TD', 'JD', 'QD', 'KD']) == 8 # Straight Flush
+    assert hand_rank(['4D', '4S', '4H', '4C', 'KD']) == 7 # 4 of a Kind
+    assert hand_rank(['4D', '4S', '4H', '3S', '3C']) == 6 # Full house
+    assert hand_rank(['2S', '5S', '6S', 'TS', 'KS']) == 5 # Flush
+    assert hand_rank(['9D', 'TC', 'JS', 'QD', 'KD']) == 4 # Straight
+    assert hand_rank(['AD', '2D', '3H', '4D', '5D']) == 4 # Straight Exception
+    assert hand_rank(['7D', '7C', '7S', '3C', '8D']) == 3 # 3 of a kind
+    assert hand_rank(['7D', '7C', '3C', '3S', '8D']) == 2 # 2 Pair
+    assert hand_rank(['4S', '4C', '1S', '6H', 'TH']) == 1 # Pair
+    assert hand_rank(['1S', '3D', '5H', '7C', '9D']) == 0 # Nothing
