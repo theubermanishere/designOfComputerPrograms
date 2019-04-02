@@ -8,10 +8,15 @@ def valid(f):
         return False
 
 def solve(formula):
-    for combo in itertools.permutations('0123456789', 5):
-        table = str.maketrans('ODEVN', ''.join(list(map(str, combo))))
-        if valid(formula.translate(table)):
-            return formula.translate(table)
+    for instance in fill_in(formula):
+        if valid(instance):
+            return instance
     return None
+
+def fill_in(formula):
+    letters = ''.join(set(re.findall('[A-Z]', formula)))
+    for digits in itertools.permutations('1234567890', len(letters)):
+        table = str.maketrans(letters, ''.join(digits))
+        yield formula.translate(table)
 
 print(solve("ODD + ODD == EVEN"))
